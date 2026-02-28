@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.06.09
+# 2026.02.28
 # 手动指定要绑定的IPV4地址
 # 情况1: 额外的IPV4地址需要与本机的IPV4地址在不同的子网内，即前缀不一致
 # 此时开设出的虚拟机的网关为宿主机的IPV4地址，它充当透明网桥，并且不是路由路径的一部分。
@@ -30,7 +30,6 @@ init_params() {
     independent_ipv6="${10:-N}"
     independent_ipv6=$(echo "$independent_ipv6" | tr '[:upper:]' '[:lower:]')
     mac_address="${11}"
-    rm -rf "vm$name"
     user_ip=""
     user_ip_range=""
     gateway=""

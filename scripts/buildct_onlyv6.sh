@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.06.10
+# 2026.02.28
 # ./buildct_onlyv6.sh CTID 密码 CPU核数 内存 硬盘 系统 存储盘
 # ./buildct_onlyv6.sh 102 1234567 1 512 5 debian11 local
 
@@ -225,7 +225,7 @@ create_container() {
         ct_internal_ipv6="2001:db8:1::${CTID}"
         pct set $CTID --net0 name=eth0,ip6="${ct_internal_ipv6}/64",bridge=vmbr1,gw6="2001:db8:1::1"
         pct set $CTID --net1 name=eth1,ip=${user_ip}/24,bridge=vmbr1,gw=172.16.1.1
-        pct set $CTID --nameserver 8.8.8.8,2001:4860:4860::8888 --nameserver 8.8.4.4,2001:4860:4860::8844
+        pct set $CTID --nameserver "8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844"
         # 获取可用的外部 IPv6 地址
         host_external_ipv6=$(get_available_vmbr1_ipv6)
         if [ -z "$host_external_ipv6" ]; then
@@ -242,7 +242,7 @@ create_container() {
         # 使用 vmbr2 网桥直接分配IPv6地址
         pct set $CTID --net0 name=eth0,ip6="${ipv6_address_without_last_segment}${CTID}/128",bridge=vmbr2,gw6="${host_ipv6_address}"
         pct set $CTID --net1 name=eth1,ip=${user_ip}/24,bridge=vmbr1,gw=172.16.1.1
-        pct set $CTID --nameserver 8.8.8.8,2001:4860:4860::8888 --nameserver 8.8.4.4,2001:4860:4860::8844
+        pct set $CTID --nameserver "8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844"
         echo "Container configured with vmbr2: ${ipv6_address_without_last_segment}${CTID}"
         echo "容器已配置使用vmbr2：${ipv6_address_without_last_segment}${CTID}"
         ct_external_ipv6="${ipv6_address_without_last_segment}${CTID}"

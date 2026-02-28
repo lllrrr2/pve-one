@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.11.05
+# 2026.02.28
 
 # 用颜色输出信息
 _red() { echo -e "\033[31m\033[01m$@\033[0m"; }
@@ -138,8 +138,8 @@ is_private_ipv6() {
     if [[ $address == 2002:* ]]; then
         temp="8"
     fi
-    # 检查IPv6地址是否以2001:开头（Teredo隧道地址）
-    if [[ $address == 2001:* ]]; then
+    # 检查IPv6地址是否以2001:0:开头（Teredo隧道地址，仅限2001:0::/32）
+    if [[ $address == 2001:0:* ]]; then
         temp="9"
     fi
     if [ "$temp" -gt 0 ]; then

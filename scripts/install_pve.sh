@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.11.05
+# 2026.02.28
 
 ########## 预设部分输出和部分中间变量
 
@@ -535,8 +535,8 @@ is_private_ipv6() {
     if [[ $address == 2002:* ]]; then
         temp="8"
     fi
-    # 检查IPv6地址是否以2001:开头（Teredo隧道地址）
-    if [[ $address == 2001:* ]]; then
+    # 检查IPv6地址是否以2001:0:开头（Teredo隧道地址，仅限2001:0::/32）
+    if [[ $address == 2001:0:* ]]; then
         temp="9"
     fi
     if [ "$temp" -gt 0 ]; then
@@ -1278,7 +1278,7 @@ clean_dns_config() {
 clean_manual_ipv6() {
     if grep -q "iface ${interface} inet6 manual" /etc/network/interfaces && grep -q "try_dhcp 1" /etc/network/interfaces; then
         chattr -i /etc/network/interfaces
-        sed -i '/iface ${interface} inet6 manual/d' /etc/network/interfaces
+        sed -i "/iface ${interface} inet6 manual/d" /etc/network/interfaces
         sed -i '/try_dhcp 1/d' /etc/network/interfaces
         chattr +i /etc/network/interfaces
     fi

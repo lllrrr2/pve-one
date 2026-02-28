@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.11.05
+# 2026.02.28
 
 ########## 预设部分输出和部分中间变量
 
@@ -193,8 +193,8 @@ is_private_ipv6() {
     if [[ $address == 2002:* ]]; then
         temp="8"
     fi
-    # 检查IPv6地址是否以2001:开头（Teredo隧道地址）
-    if [[ $address == 2001:* ]]; then
+    # 检查IPv6地址是否以2001:0:开头（Teredo隧道地址，仅限2001:0::/32）
+    if [[ $address == 2001:0:* ]]; then
         temp="9"
     fi
     if [ "$temp" -gt 0 ]; then
@@ -412,8 +412,8 @@ download_with_retry() {
         delay=$((delay * 2))
         [ $delay -gt 30 ] && delay=30
     done
-    red "Download failed: $url, maximum number of attempts exceeded ($max_attempts)"
-    red "下载失败：$url，超过最大尝试次数 ($max_attempts)"
+    _red "Download failed: $url, maximum number of attempts exceeded ($max_attempts)"
+    _red "下载失败：$url，超过最大尝试次数 ($max_attempts)"
     return 1
 }
 
@@ -522,7 +522,7 @@ configure_vmbr0() {
         chattr -i /etc/network/interfaces
         echo "    up ip addr del $fe80_address dev $interface" >>/etc/network/interfaces
         remove_duplicate_lines "/etc/network/interfaces"
-        chattr -i /etc/network/interfaces
+        chattr +i /etc/network/interfaces
     fi
     # 如果IPV6地址是写死附加上的，这块附加回vmbr0，方便后续使用ip6tables进行转发
     appended_file="/usr/local/bin/pve_appended_content.txt"

@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.06.10
+# 2026.02.28
 
 # 设置 echo "kvm64" > /usr/local/bin/cpu_type 可方便虚拟机进行迁移
 
@@ -379,8 +379,6 @@ download_x86_image() {
 }
 
 prepare_arm_image() {
-    # 非local全局定义参数，后续有使用
-    system="$1"
     ext="img"
     url=""
     declare -A ubuntu_map=(

@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.06.09
+# 2026.02.28
 # ./pve_delete.sh arg1 arg2
 # arg 可填入虚拟机/容器的序号，可以有任意多个
 # 日志 /var/log/pve_delete.log
@@ -57,7 +57,7 @@ cleanup_ipv6_nat_rules() {
         local vm_internal_ipv6="2001:db8:1::${vmctid}"
         local host_external_ipv6=""
         if [ -f "$rules_file" ]; then
-            host_external_ipv6=$(grep -oP "DNAT --to-destination $vm_internal_ipv6" "$rules_file" | head -1 | grep -oP "(?<=-d )[^ ]+" || true)
+            host_external_ipv6=$(grep "DNAT --to-destination $vm_internal_ipv6" "$rules_file" | head -1 | grep -oP "(?<=-d )[^ ]+" || true)
             if [ -n "$host_external_ipv6" ]; then
                 log "Removing IPv6 NAT rules: $vm_internal_ipv6 -> $host_external_ipv6"
                 ip6tables -t nat -D PREROUTING -d "$host_external_ipv6" -j DNAT --to-destination "$vm_internal_ipv6" 2>/dev/null || true
@@ -126,8 +126,7 @@ handle_vm_deletion() {
     qm stop "$vmid" 2>/dev/null || true
     # 检查VM是否完全停止
     if ! check_vmct_status "$vmid" "vm"; then
-        log "Warning: VM $vmid did not stop cleanly"
-        return 1
+        log "Warning: VM $vmid did not stop cleanly, attempting destroy anyway"
     fi
     # 删除VM
     log "Destroying VM $vmid"
@@ -153,8 +152,7 @@ handle_ct_deletion() {
     pct stop "$ctid" 2>/dev/null || true
     # 检查容器是否完全停止
     if ! check_vmct_status "$ctid" "ct"; then
-        log "Warning: CT $ctid did not stop cleanly"
-        return 1
+        log "Warning: CT $ctid did not stop cleanly, attempting destroy anyway"
     fi
     # 删除容器
     log "Destroying CT $ctid"

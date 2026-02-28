@@ -1,7 +1,7 @@
 #!/bin/bash
 # from
 # https://github.com/oneclickvirt/pve
-# 2025.06.09
+# 2026.02.28
 
 # ./buildct.sh CTID 密码 CPU核数 内存 硬盘 SSH端口 80端口 443端口 外网端口起 外网端口止 系统 存储盘 独立IPV6
 # ./buildct.sh 102 1234567 1 512 5 20001 20002 20003 30000 30025 debian11 local N
@@ -23,7 +23,7 @@ init() {
     storage="${12:-local}"
     independent_ipv6="${13:-N}"
     independent_ipv6=$(echo "$independent_ipv6" | tr '[:upper:]' '[:lower:]')
-    rm -rf "ct$name"
+    rm -rf "ct${CTID}"
     en_system=$(echo "$system_ori" | sed 's/[0-9]*//g; s/\.$//')
     num_system=$(echo "$system_ori" | sed 's/[a-zA-Z]*//g')
     system="$en_system-$num_system"
